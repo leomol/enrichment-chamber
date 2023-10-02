@@ -10,11 +10,11 @@
 %   Discard bottle holes for the back wall.
 
 % 2020-08-24. Leonardo Molina.
-% 2023-09-13. Last Modified.
+% 2023-09-20. Last Modified.
 
 % Material.
 mainWallThickness = 5.9;
-mazeWallThickness = 3.0;
+mazeWallThickness = 2.9;
 filmThickness = 0.75;
 
 % General.
@@ -80,6 +80,7 @@ movementPlay = 1;
 % Mazes.
 mazeWallToothCount = 13;
 mazeFloorToothCount = 7;
+mazeLip = 5;
 
 mazes = getMazes();
 thickParts = struct();
@@ -144,8 +145,8 @@ for m = 1:nMazes
     [guides, walls] = drawMaze(mazeOffset, maze.x, maze.y, mazeWallWidth, mazeWallHeight, mazeWallThickness, mainWallThickness, mazeWallToothCount, mazeFloorToothCount, mazeWallKerf);
 
     % Boundaries. Thick.
-    guides.move(start(1), start(2));
-    guides.rectangle(mazeRoofDx2, mazeRoofDy2, smallFillet, +mainWallKerf);
+    guides.move(start(1), start(2) - mazeLip);
+    guides.rectangle(mazeRoofDx2, mazeRoofDy2 + 2 * mazeLip, smallFillet, +mainWallKerf);
 
     % Ventilation. Thick.
     guides.move(mazeOffset(1), mazeOffset(2));
@@ -160,7 +161,7 @@ for m = 1:nMazes
     cla();
     hold('all');
     plot(guides.x, guides.y);
-    plot(walls.x, walls.y);
+    % plot(walls.x, walls.y);
     axis('equal');
     set(gca(), 'XTick', [], 'YTick', []);
     box('on');
@@ -416,7 +417,7 @@ axis('equal');
 set(gca(), 'XTick', [], 'YTick', []);
 box('on');
 
-%% Export. !!
+%% Export.
 % Create output folders.
 makedir('CAD', 'CAD/thick', 'CAD/thin', 'CAD/film');
 
@@ -473,7 +474,7 @@ end
 
 % getMazes - Generate arbitrary maze designs programatically.
 % 2020-08-24. Leonardo Molina.
-% 2023-08-24. Last Modified.
+% 2023-09-20. Last Modified.
 function mazes = getMazes()
     mazes = struct();
     mazes.a1.x = [
@@ -575,24 +576,24 @@ function mazes = getMazes()
         0 1 1 0 1 0
         1 0 1 0 0 1
         ];
-
-    mazes.f1.x = [
+    
+    mazes.z1.x = [
         1 1 1 1 1
-        0 0 1 1 0
-        0 1 1 0 0
-        0 1 1 0 0
-        0 0 0 0 0
         0 0 0 1 1
-        0 0 0 1 0
+        0 0 0 0 0
+        0 1 1 1 0
+        0 0 1 0 0
+        0 0 0 0 0
+        1 1 0 0 0
         1 1 1 1 1
         ];
-    mazes.f1.y = [
-        1 0 1 0 0 1
+    mazes.z1.y = [
+        1 0 1 0 0 0
+        1 1 1 1 0 1
         1 1 0 0 1 1
-        0 1 0 0 1 0
-        1 1 1 0 1 1
-        0 1 0 1 0 1
-        1 1 1 0 0 0
-        1 0 1 1 0 1
+        1 1 0 0 1 1
+        1 1 0 1 1 1
+        1 0 1 1 1 1
+        0 0 0 1 0 1
         ];
 end
